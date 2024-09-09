@@ -5,5 +5,4 @@ class MoodEntry(models.Model):
     description = models.TextField()
     price = models.IntegerField()
     category = models.CharField(max_length=255)
-    condition = models.CharField(max_length=255)
 
