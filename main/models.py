@@ -1,10 +1,11 @@
 from django.db import models
 
-class MoodEntry(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    price = models.IntegerField()
-    category = models.CharField(max_length=255)
+class Product(models.Model):
+    nama = models.CharField(max_length=255)
+    kategori = models.CharField(max_length=255)
+    deskripsi = models.TextField()
+    stok = models.IntegerField()
+    harga = models.IntegerField()
 
     @property
     def is_mood_strong(self):
