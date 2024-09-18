@@ -1,16 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
 <h1>Share Store</h1>
 
-<h5>Nama Item: </h5>
-<p>{{ NamaItem }}<p>
+<h5>NPM: </h5>
+<p>{{ npm }}<p>
 
-<h5>Kategori: </h5>
-<p>{{ Kategori }}<p>
+<h5>Name:</h5>
+<p>{{ name }}</p>
 
-<h5>Deskripsi: </h5>
-<p>{{ Deskripsi }}<p>
+<h5>Class:</h5>
+<p>{{ class }}</p>
 
-<h5>Stok: </h5>
-<p>{{ Stok }}<p>
+{% if not prod_entries %}
+<p>Belum ada data product pada share store.</p>
+{% else %}
+<table>
+  <tr>
+    <th>Product Name</th>
+    <th>Time</th>
+    <th>Deskripsi</th>
+    <th>Stok</th>
+  </tr>
 
-<h5>Harga: </h5>
-<p>{{ Harga }}<p>
+  {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini 
+  {% endcomment %} 
+  {% for product in prod_entries %}
+  <tr>
+    <td>{{product.nama}}</td>
+    <td>{{product.time}}</td>
+    <td>{{product.deskripsi}}</td>
+    <td>{{product.stok}}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+<br />
+
+<a href="{% url 'main:create_product' %}">
+  <button>Add New Product</button>
+</a>
+{% endblock content %}
