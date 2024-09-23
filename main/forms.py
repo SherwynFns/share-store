@@ -1,7 +1,7 @@
 from django.forms import ModelForm
 from main.models import Product
 
-class MoodEntryForm(ModelForm):
+class ProductEntryForm(ModelForm):
     class Meta:
         model = Product
-        fields = ["nama", "deskripsi", "stok"]
+        fields = ["nama", "deskripsi", "stok", "harga"]
