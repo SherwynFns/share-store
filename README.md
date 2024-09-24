@@ -2,6 +2,7 @@ Nama: A. Sherwyn Fawwaz Nitisara Suthaputra
 NPM: 2306165811
 Kelas : PBP F
 
+TUGAS INDIVIDU 2
 
 Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
 Jawab: 
@@ -43,18 +44,24 @@ Model pada Django disebut ORM (Object Relational Mapping) karena Django mengguna
 TUGAS INDIVIDU 3
 
 Mengapa Data Delivery Diperlukan dalam Pengembangan Platform?
+Jawab:
 Data delivery penting dalam pengembangan platform karena memastikan informasi yang disimpan di server atau database pusat dapat diakses oleh pengguna dari berbagai lokasi. Dengan data delivery, platform dapat berkomunikasi dan terintegrasi dengan layanan lain seperti API eksternal, memungkinkan data untuk dikirim dan diterima dalam format yang sesuai. Hal ini mendukung kolaborasi dan interaksi efisien antar sistem, serta memastikan komunikasi data antara berbagai komponen platform berjalan dengan lancar, memfasilitasi akses dan pemrosesan informasi yang tepat.
 
 Mana yang Lebih Baik: XML atau JSON? Mengapa JSON Lebih Populer?
+Jawab:
 JSON lebih populer dibandingkan XML karena memiliki format yang lebih sederhana dan mudah dibaca. JSON menggunakan {} untuk merepresentasikan objek dan array, sementara XML menggunakan tag <tag>...</tag> untuk setiap elemen, membuatnya lebih panjang dan sulit dibaca. XML cocok untuk dokumen yang membutuhkan struktur kompleks dan detil, sedangkan JSON lebih sering digunakan untuk aplikasi yang membutuhkan komunikasi data cepat dan efisien.
 
 Jelaskan fungsi dari method is_valid() pada Form Django dan Pentingnya
-Method is_valid() pada form Django digunakan untuk memvalidasi data input yang dimasukkan ke dalam form, memastikan data tersebut sesuai dengan aturan yang telah ditentukan (misalnya tipe data, panjang maksimal, atau format yang benar). Jika data valid, method ini mengembalikan nilai True, dan jika tidak valid, mengembalikan False. Method ini penting untuk mencegah data yang tidak sesuai masuk ke dalam sistem.
+Method is_valid() 
+Jawab:
+Pada form Django digunakan untuk memvalidasi data input yang dimasukkan ke dalam form, memastikan data tersebut sesuai dengan aturan yang telah ditentukan (misalnya tipe data, panjang maksimal, atau format yang benar). Jika data valid, method ini mengembalikan nilai True, dan jika tidak valid, mengembalikan False. Method ini penting untuk mencegah data yang tidak sesuai masuk ke dalam sistem.
 
 Mengapa csrf_token Diperlukan di Form Django dan Apa Risikonya Tanpa CSRF?
+Jawab:
 csrf_token digunakan dalam form Django untuk melindungi aplikasi dari serangan CSRF (Cross-Site Request Forgery), di mana penyerang mencoba memanipulasi pengguna agar melakukan tindakan yang tidak diinginkan. Dengan menambahkan csrf_token dalam form, aplikasi dapat memverifikasi bahwa permintaan berasal dari sumber yang sah. Jika tidak menambahkan csrf_token, penyerang bisa mengeksploitasi sesi pengguna yang sudah login untuk melakukan tindakan yang merugikan, seperti mengubah pengaturan akun atau mencuri data pribadi tanpa persetujuan pengguna. Tanpa CSRF token, aplikasi dapat memproses permintaan palsu yang tampak seperti berasal dari pengguna yang sah.
 
 Langkah-langkah Implementasi Checklist pada Django
+Jawab:
 1. Buat direktori templates di direktori utama dan buat file HTML bernama base.html yang berisi kerangka halaman web.
 2. Tambahkan konfigurasi di DIRS pada settings.py, lalu buat extends dan block content di main.html. Import uuid di models.py dan lakukan migrasi.
 3. Buat file forms.py di direktori main untuk membuat form, simpan form sebagai objek, dan tambahkan import di views.py dengan fungsi yang menerima parameter request.
@@ -65,3 +72,60 @@ Langkah-langkah Implementasi Checklist pada Django
 8. Buat fungsi show_json di views.py, tambahkan path URL di urls.py, lalu jalankan proyek di http://localhost:8000/json/.
 9. Buat fungsi show_xml_by_id dan show_json_by_id di views.py, tambahkan path URL di urls.py, lalu akses di http://localhost:8000/json/[id]/ atau http://localhost:8000/xml/[id]/.
 10. Uji endpoint di Postman, lalu lakukan push ke GitHub dan PWS.
+
+Bukti screenshot Postman:
+1. http://localhost:8000/xml/
+![alt text](<Tangkapan Layar 2024-09-18 pukul 11.24.11.png>)
+2. http://localhost:8000/xml/[id]/ 
+![alt text](<Tangkapan Layar 2024-09-18 pukul 11.27.33.png>)
+3. http://localhost:8000/json/
+![alt text](<Tangkapan Layar 2024-09-18 pukul 11.32.17.png>)
+4. http://localhost:8000/json/[id]/
+![alt text](<Tangkapan Layar 2024-09-18 pukul 11.28.48.png>)
+
+
+-------------------------------------------------------------------------------------------
+
+TUGAS INDIVIDU 4
+
+Apa perbedaan antara HttpResponseRedirect() dan redirect()
+Jawab:
+HttpResnponseRedirect() adalah salah satu fungsi dari django yang digunakan untuk mengarahkan user pada URL yang kita tentukan dan hanya menerima URL sebagai string. Sedangkan redirect() berfungsi adalah metode yang lebih fleksibel, mempermudah pengalihan dengan menerima nama view, objek, atau URL.
+
+Jelaskan cara kerja penghubungan model Product dengan User!
+Jawab:
+Hubungan antara model Product dengan User dilakukan dengan menggunakan ForeignKey. Dalam metode ini, satu pengguna (user) bisa memiliki banyak produk, tetapi setiap produk hanya dimiliki oleh satu pengguna. Ini dikenal sebagai hubungan One-to-many (satu pengguna ke banyak produk).
+Cara kerjanya:
+1. Mengimpor User pada models.py 
+2. Menambahkan "user = models.ForeignKey(User, on_delete=models.CASCADE)" untuk menunjukkan setiap produk dimiliki oleh user dan jika User dihapus, maka semya produk yang dimiliki oleh pengguna tersebut juga akan dihapus.
+3. Memodifikasi fungsi pada create_product dalam views.py dan menambahkan commit=False untuk mencegah Django agar tidak langsung menyimpan objek yang telah dibuat dari form langsung ke database. Kemudian mengisi field user dengan objek User dari return value request.user yang sedang terotorisasi untuk menandakan bahwa objek tersebut dimiliki oleh pengguna yang sedang login.
+4. Menambahkan request.user.username untuk menampilkan username pengguna yang login pada halaman main.
+
+Apa perbedaan antara authentication dan authorization, apakah yang dilakukan saat pengguna login? Jelaskan bagaimana Django mengimplementasikan kedua konsep tersebut.
+Jawab: 
+Authentication atau otentikasi digunakan untuk memverifikasi identitas seorang user. Saat user mencoba login, sistem memastikan user tersebut cocok dengan data yang tersimpan di database, misalnya dengan memverifikasi nama user dan kata sandi.Jika nama user dan kata sandi sesuai, pengguna dianggap terotentikasi. Sedangkan authorization atau otorisasi digunakan untuk menentukan apa yang diizinkan dilakukan oleh user setalah mereka diotentikasi. Setelah user berhasil diotentikasi, sistem menentukan hak akses atau izin pengguna terhadap halaman web, fitur, atau data.
+
+Secara umum, Django menggunakan authenticate() dan login() untuk memverifikasi pengguna. Pertama authenticate() berfungsi untuk memverifikasi apakah kredensial pengguna (misalnya, username dan password) benar. Jika benar, Django mengembalikan objek pengguna. Jika salah, akan mengembalikan None. Kemudian login() berfungsi untuk membuat session untuk pengguna setelah mereka berhasil diautentikasi. Sementara otorisasi diatur melalui permissions dan groups, yang diperiksa dengan has_perm() atau @permission_required decorator.
+
+Bagaimana Django mengingat pengguna yang telah login? Jelaskan kegunaan lain dari cookies dan apakah semua cookies aman digunakan?
+Jawab:
+Django mengingat pengguna yang telah login dengan menggunakan session yang disimpan di cookies. Ketika pengguna berhasil login, Django membuat session untuk pengguna tersebut. Session ini bertindak seperti "penyimpanan sementara" yang menyimpan data penting tentang pengguna, termasuk apakah mereka sudah login atau belum. 
+
+Selain untuk menyimpan session, cookies memiliki kegunaan lain seperti untuk menyimpan pengaturan/preferensi user, seperti bahasa pilihan, tema tampilan, ukuran teks, dll. Kemudian cookies sering digunakan untuk melacak aktivitas user di situs web. Dalam e-commerce cookies digunakan untuk menyimpan informasi keranjang belanja pengguna tanpa takut kehilangan item yang telah dipilih. 
+
+Namun tidak semua cookies aman digunakan. Kita harus bijak untuk menyetujui cookies pada sebuah web, seperti penggunaan HTTPS/HttpOnly pada laman web, membatasi akses domain/path, menggunakan token CSRF untuk melindungi dari serangan CSRF, dan menggunakan cookie expire time.
+
+Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+Jawab:
+1. Membuat fungsi dan forum registrasi. Kita menggunakan UserCreationForm dari django.contrib.auth. Form ini mempermudah pembuatan akun pengguna dalam aplikasi web. Kita kemudian membuat fungsi registrasi untuk memproses formulir dan membuat akun baru saat formulir dikirim. Sebuah template HTML disediakan untuk menampilkan halaman pendaftaran, dan sistem pesan memberikan umpan balik kepada pengguna. Fungsi ini diimpor ke dalam views.py, dan rute URL untuk pendaftaran ditambahkan ke urlpatterns.
+2. Membuat fungsi login. Kita membuat fungsi login menggunakan authenticate, login, dan AuthenticationForm untuk autentikasi pengguna. Fungsi login_user di views.py memverifikasi kredensial pengguna dan membuat session jika login berhasil. Template login.html dibuat untuk memungkinkan pengguna masuk ke aplikasi, dengan opsi pendaftaran bagi mereka yang belum memiliki akun.
+3. Restriksi Akses. Kita menambahkan dekorator login_required untuk membatasi akses ke halaman utama (main). Ini memastikan hanya pengguna yang sudah login yang bisa mengakses halaman tersebut. Jika pengguna belum login, mereka akan diarahkan ke halaman login.
+4. Menggunakan data dari Cookies. Kita menambahkan fungsionalitas last_login untuk menyimpan waktu login terakhir pengguna menggunakan cookie. Data ini ditampilkan di halaman utama, dan cookie tersebut dihapus saat pengguna logout. Fungsi ini diatur di views.py, dan informasi login terakhir pengguna ditampilkan sebagai pesan di halaman utama.
+5. Melihat Cookies. Untuk melihat cookie di proyek, kita membuka halaman di localhost menggunakan Chrome, dan melalui Inspect di bagian Application, kami bisa melihat cookie yang disimpan.
+6. Menghubungkan Product dengan User. Kita menambahkan relasi antara ProductEntry dan User di models.py dengan menggunakan ForeignKey. Setelah melakukan perubahan pada kode di views.py, termasuk menampilkan entri produk yang terkait dengan pengguna yang login, kami menyimpan semua perubahan dan melakukan migrasi database. Jika terjadi error, default value untuk field user akan diatur, dan proyek dijalankan dengan pengaturan DEBUG yang sudah dimodifikasi.
+
+Bukti screenshot dua akun dengan tiga dummy data, beserta tampilan cookies:
+1. sherwyn.fz
+![alt text](<Tangkapan Layar 2024-09-24 pukul 23.09.43.png>)
+2. sherwyn.fns
+![alt text](<Tangkapan Layar 2024-09-24 pukul 23.09.04.png>)
