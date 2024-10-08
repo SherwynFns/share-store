@@ -3,59 +3,205 @@
 
 {% block meta %}
 <title>Share Store</title>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
 {% endblock meta %}
 
 {% block content %}
 {% include 'navbar.html' %}
 
-<div class="overflow-x-hidden px-4 md:px-8 pb-8 pt-24 min-h-screen bg-gray-900 flex flex-col">
-
-  <!-- Informasi NPM, Name, Class -->
-  <div class="p-2 mb-6 relative">
-    <div class="relative grid grid-cols-1 z-30 md:grid-cols-3 gap-8">
+<div class="overflow-x-hidden px-4 md:px-8 pb-8 pt-24 min-h-screen bg-gray-100 text-gray-800 flex flex-col">
+  <!-- Information Cards -->
+  <div class="p-2 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       {% include "card_info.html" with title='NPM' value=npm %}
       {% include "card_info.html" with title='Name' value=name %}
       {% include "card_info.html" with title='Class' value=class %}
-    </div>
-
-    <!-- Decorative Line for Desktop -->
-    <div class="w-full px-6 absolute top-[44px] left-0 z-20 hidden md:flex">
-    </div>
-
-    <!-- Decorative Line for Mobile -->
-    <div class="h-full w-full py-6 absolute top-0 left-0 z-20 md:hidden flex">
     </div>
   </div>
 
   <!-- Last Login Section -->
   <div class="px-3 mb-4">
-    <div class="flex rounded-md items-center bg-gray-700 py-2 px-4 w-fit">
-      <h1 class="text-white text-center">Last Login: {{ last_login }}</h1>
+    <div class="flex rounded-md items-center bg-gray-300 py-2 px-4 w-fit">
+      <h1 class="text-gray-800 text-center">Last Login: {{ last_login }}</h1>
     </div>
   </div>
 
-  <!-- Add New Mood Entry Button -->
-  <div class="flex justify-end mb-6">
-    <a href="{% url 'main:create_product' %}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
+  <!-- Add New Product Buttons -->
+  <div class="flex justify-end mb-6 space-x-2">
+    <a href="{% url 'main:create_product' %}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg">
       Add New Product
     </a>
+    <button onclick="showModal();" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg">
+      Add New Product by AJAX
+    </button>
   </div>
 
-  <!-- Kondisi Jika Tidak Ada Data Mood -->
-  {% if not prod_entries %}
-  <div class="flex flex-col items-center justify-center min-h-[24rem] p-6">
-    <img src="{% static 'image/sedih-banget.png' %}" alt="Sad face" class="w-32 h-32 mb-4"/>
-    <p class="text-center text-gray-400 mt-4">Belum ada data product pada Share Store.</p>
+  <!-- Product Cards -->
+  <div id="product_cards"></div>
+
+  <!-- Modal -->
+  <div id="crudModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
+    <div id="crudModalContent" class="bg-white rounded-lg shadow-lg w-full max-w-md mx-4 p-6 transform scale-95 opacity-0 transition-transform duration-200">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xl font-semibold text-gray-800">
+          Add New Product
+        </h3>
+        <button type="button" class="text-gray-600 hover:text-gray-800" onclick="hideModal();">
+          <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707A1 1 0 015.707 4.293L10 8.586z" clip-rule="evenodd" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <form id="productForm">
+        {% csrf_token %}
+        <!-- Existing fields -->
+        <div class="mb-4">
+          <label for="nama" class="block text-sm font-medium text-gray-700">Name</label>
+          <input type="text" id="nama" name="nama" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Enter product name" required>
+        </div>
+        <div class="mb-4">
+          <label for="deskripsi" class="block text-sm font-medium text-gray-700">Description</label>
+          <textarea id="deskripsi" name="deskripsi" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Enter product description" required></textarea>
+        </div>
+        <div class="mb-4">
+          <label for="stok" class="block text-sm font-medium text-gray-700">Stock (1-10)</label>
+          <input type="number" id="stok" name="stok" min="1" max="10" class="mt-1 block w-full border border-gray-300 rounded-md p-2" required>
+        </div>
+        <div class="mb-4">
+          <label for="harga" class="block text-sm font-medium text-gray-700">Price</label>
+          <input type="number" id="harga" name="harga" min="0" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Enter product price" required>
+        </div>
+        <div class="flex justify-end">
+          <button type="button" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg mr-2" onclick="hideModal();">Cancel</button>
+          <button type="submit" id="submitProduct" class="bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded-lg">Save</button>
+        </div>
+      </form>
+    </div>
   </div>
-  {% else %}
-  
-  <!-- Daftar Mood Entries -->
-  <div class="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 w-full">
-    {% for product in prod_entries %}
-      {% include 'card_product.html' with product=product %}
-    {% endfor %}
-  </div>
-  
-  {% endif %}
 </div>
+
+<script>
+  // Get CSRF token function
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let cookie of cookies) {
+        cookie = cookie.trim();
+        if (cookie.startsWith(name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  const csrftoken = getCookie('csrftoken');
+
+  // Show and hide modal functions
+  function showModal() {
+    const modal = document.getElementById('crudModal');
+    const modalContent = document.getElementById('crudModalContent');
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+      modalContent.classList.remove('opacity-0', 'scale-95');
+      modalContent.classList.add('opacity-100', 'scale-100');
+    }, 50);
+  }
+
+  function hideModal() {
+    const modal = document.getElementById('crudModal');
+    const modalContent = document.getElementById('crudModalContent');
+    modalContent.classList.remove('opacity-100', 'scale-100');
+    modalContent.classList.add('opacity-0', 'scale-95');
+    setTimeout(() => {
+      modal.classList.add('hidden');
+    }, 150);
+  }
+
+  // Add product via AJAX
+  async function addProduct(event) {
+    event.preventDefault();
+    const formData = new FormData(document.getElementById('productForm'));
+    try {
+      const response = await fetch("{% url 'main:add_product_ajax' %}", {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrftoken,
+        },
+        body: formData,
+      });
+      if (response.ok) {
+        await refreshProdEntries();
+        document.getElementById('productForm').reset();
+        hideModal();
+      } else {
+        console.error('Error adding product');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+  // Fetch and display product entries
+  async function refreshProdEntries() {
+    try {
+      const response = await fetch("{% url 'main:show_json' %}");
+      const prodEntries = await response.json();
+      const productCards = document.getElementById('product_cards');
+      productCards.innerHTML = '';
+      if (prodEntries.length === 0) {
+        productCards.innerHTML = `
+          <div class="flex flex-col items-center justify-center min-h-[24rem] p-6">
+            <p class="text-center text-gray-600 mt-4">No products available in Share Store.</p>
+          </div>
+        `;
+      } else {
+        let htmlString = '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">';
+        prodEntries.forEach((item) => {
+          const nama = DOMPurify.sanitize(item.fields.nama);
+          const deskripsi = DOMPurify.sanitize(item.fields.deskripsi);
+          const harga = DOMPurify.sanitize(item.fields.harga.toString());
+          htmlString += `
+            <div class="bg-white shadow-md rounded-lg p-4 flex flex-col border">
+              <div class="mb-4">
+                <h3 class="font-bold text-xl mb-2">${nama}</h3>
+                <p class="text-gray-600">${item.fields.time}</p>
+              </div>
+              <div class="flex-grow">
+                <p class="font-semibold mb-2">Description</p>
+                <p class="text-gray-700 mb-2">${deskripsi}</p>
+                <p class="font-semibold mb-2">Stock: ${item.fields.stok}</p>
+                <p class="font-semibold mb-2">Price: ${harga}</p>
+              </div>
+              <div class="mt-4 flex space-x-2">
+                <a href="/edit-product/${item.pk}" class="bg-gray-500 hover:bg-gray-600 text-white rounded-lg px-4 py-2">Edit</a>
+                <a href="/delete/${item.pk}" class="bg-gray-500 hover:bg-gray-600 text-white rounded-lg px-4 py-2">Delete</a>
+              </div>
+            </div>
+          `;
+        });
+        htmlString += '</div>';
+        productCards.innerHTML = htmlString;
+      }
+    } catch (error) {
+      console.error('Error fetching product entries:', error);
+    }
+  }
+
+  // Initial product entries load
+  refreshProdEntries();
+
+  // Event listeners
+  document.getElementById('productForm').addEventListener('submit', addProduct);
+  document.getElementById("productForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    addProduct();
+  })
+</script>
+
 {% endblock content %}

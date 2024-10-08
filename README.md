@@ -199,3 +199,34 @@ Bukti screenshot tampilan login, register, main dengan product dan tanpa product
 ![alt text](<Tangkapan Layar 2024-10-02 pukul 04.42.56.png>)
 6. Edit Product
 ![alt text](<Tangkapan Layar 2024-10-02 pukul 04.43.07.png>)
+
+-------------------------------------------------------------------------------------------
+
+TUGAS INDIVIDU 6
+
+Jelaskan manfaat dari penggunaan JavaScript dalam pengembangan aplikasi web!
+Jawab:
+JavaScript biasanya dijalankan pada sisi klien (client-side JavaScript) dalam aplikasi web. Bahasa ini memungkinkan pembuatan halaman web yang interaktif dan responsif, di mana perubahan dapat dilakukan tanpa perlu memuat ulang halaman secara keseluruhan. Dengan JavaScript, elemen halaman bisa diperbarui secara dinamis. Selain itu, JavaScript mendukung fitur-fitur seperti lazy loading, animasi, serta elemen dinamis lainnya. JavaScript juga mengelola cookie dan penyimpanan lokal, yang memungkinkan aplikasi menyimpan informasi pengguna seperti preferensi atau status login. Pengguna juga bisa menyimpan data di penyimpanan lokal melalui LocalStorage atau SessionStorage, sehingga aplikasi bisa berjalan tanpa harus terus-menerus berkomunikasi dengan server.
+
+Jelaskan fungsi dari penggunaan await ketika kita menggunakan fetch()! Apa yang akan terjadi jika kita tidak menggunakan await?
+Jawab:
+Penggunaan await dalam fetch() membuat JavaScript menunggu hingga respons HTTP diterima dan diproses sebelum melanjutkan eksekusi kode. Jika await tidak digunakan, fungsi fetch() akan langsung mengembalikan objek promise, bukan hasil yang telah diproses. Tanpa await, kode akan terus berjalan dan mungkin mencoba memproses data yang belum tersedia, menyebabkan kesalahan atau hasil yang tidak diinginkan. Untuk menangani promise tanpa await, perlu menggunakan metode .then(), yang dapat membuat kode lebih rumit dan tidak sebersih pendekatan async/await.
+
+Mengapa kita perlu menggunakan decorator csrf_exempt pada view yang akan digunakan untuk AJAX POST?
+Jawab:
+Decorator csrf_exempt digunakan untuk menonaktifkan pengecekan CSRF pada permintaan POST, seperti dalam AJAX POST. Hal ini diperlukan untuk menghindari kegagalan permintaan yang tidak menyertakan token CSRF, seperti pada fungsi add_product_entry_ajax.
+
+Pada tutorial PBP minggu ini, pembersihan data input pengguna dilakukan di belakang (backend) juga. Mengapa hal tersebut tidak dilakukan di frontend saja?
+Jawab:
+Meskipun validasi di frontend penting untuk memberikan umpan balik cepat kepada pengguna, pembersihan dan validasi di backend juga diperlukan untuk alasan keamanan.Frontend bisa dimodifikasi oleh pengguna melalui alat seperti dev tools, yang memungkinkan mereka untuk melewati validasi atau memanipulasi input. Validasi di backend memastikan bahwa input yang tidak valid tidak diterima oleh server meskipun validasi frontend telah diubah atau dilewati. Backend dapat memberikan tingkat validasi dan sanitasi yang lebih mendalam, misalnya memeriksa integritas data, format yang benar, dan keamanan dari serangan seperti SQL Injection atau Cross-Site Scripting (XSS). Dengan melakukan pembersihan di backend, kita memastikan bahwa aplikasi akan bekerja sesuai yang diharapkan terlepas dari bagaimana input dimasukkan di frontend, menjaga keandalan dan prediktabilitas sistem. Oleh karena itu, validasi di frontend dan backend sama-sama penting. Frontend memberikan feedback langsung kepada pengguna, sedangkan backend memastikan keamanan dan integritas data.
+
+Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!
+Jawab:
+1. Menambahkan eror message pada login, dimana akan menempelkan pesan eror kepada request yang mengirimkan permintaan login, yang nantinya akan ditempelkan di template login html.
+2. Membuat function untuk menambahkan product dengan AJAX, yaitu dengan menambahkan import dan membuat fungsi baru di views.py dengan nama add_product_entry_ajax.
+3. Menambahkan routing untuk fungsi add_product_entry_ajax, dengan membuka urls.py pada direktori main dan mengimpor fungsi yang sudah kita buat serta menambahkan path url ke urlpatterns untuk mengakses fungsi impor yang sudah diimpor tadi.
+4. Menampilkan data Product Entry dengan fetch() API, yaitu dengan meghapus 2 baris pada file views.py dan mengubah baris pertama pada fungsi show_xml dan show_json. Kemudian membuka file main.html dan menghapus bagian block conditional product_entries untuk menampilkan card_product ketika kosong atau tidak. Kemudian membuat block script di bagian bawah file, yaitu sebelum {% endblock content %}. Kemudian memebuat fungsi baru pada block script dengan nama refreshProdEntries yang digunakan untuk me-refresh data moods secara asinkronus.
+5. Membuat modal sebagai form untuk menambahkan mood. agar modal dapat berfungsi, kita perlu menambahkan fungsi-fungsi JavaScript.
+6. Menambahkan data Product dengan AJAX. dimana modal dengan form yang telah kita buat tadi digunakan untuk menambhakan data product. sehingga kita perlu membuat fungsi JavaScript, kemudian tambahin sebuah event listener pada form di modal untuk menjalankan fungsi addProduct().
+7. Melindungi aplikasi dari cross site scripting(XSS), yaitu dengan menambahkan data product baru dengan nilai field. Field lain dapat diisi sesuai dengan keinginan kita lalu tekan tombol simpan dan jika penyimpanan berhasil maka kita akan mendapatkan pesan alert dengan nilai xss. Kemudian kita menambahkan strips_tags untuk memebersihkan data baru  dengan membuka berkas views.py dan menambahkan import strip_tags dan pada fungsi add_product_ajax kita gunakan fungsi strip_tags pada data product. Kemudian kita menambahkan strips_tags dan hapus data product yang tadi kita tambahin, membersihkan data dengan DOMPurify dengan membuka main.html
+8. Me-refresh halaman utama kita dan alert box tidak akan muncul lagi di browser kita.

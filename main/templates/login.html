@@ -5,34 +5,33 @@
 {% endblock meta %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center w-screen bg-gray-900 py-16 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-lg w-full space-y-10">
+<div class="min-h-screen flex items-center justify-center bg-gray-100 text-gray-800 py-16 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8">
     <div>
-      <h2 class="text-center text-white text-4xl font-extrabold tracking-tight">
+      <h2 class="text-center text-3xl font-extrabold">
         Login to your account
       </h2>
     </div>
     <form class="space-y-6" method="POST" action="">
       {% csrf_token %}
-      <input type="hidden" name="remember" value="true">
       <div class="rounded-lg shadow-sm space-y-4">
         <div>
           <label for="username" class="sr-only">Username</label>
           <input id="username" name="username" type="text" required 
-                 class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-600 placeholder-gray-400 text-white bg-gray-800 focus:outline-none focus:ring-white focus:border-white sm:text-lg" 
+                 class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-800 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-lg" 
                  placeholder="Username">
         </div>
         <div>
           <label for="password" class="sr-only">Password</label>
           <input id="password" name="password" type="password" required 
-                 class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-600 placeholder-gray-400 text-white bg-gray-800 focus:outline-none focus:ring-white focus:border-white sm:text-lg" 
+                 class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-800 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-lg" 
                  placeholder="Password">
         </div>
       </div>
 
       <div>
         <button type="submit" 
-                class="w-full flex justify-center py-3 px-6 border border-transparent text-lg font-semibold rounded-lg text-black bg-white hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition">
+                class="w-full flex justify-center py-3 px-6 border border-transparent text-lg font-semibold rounded-lg text-white bg-gray-700 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition">
           Sign in
         </button>
       </div>
@@ -41,27 +40,17 @@
     {% if messages %}
     <div class="mt-4 space-y-3">
       {% for message in messages %}
-      {% if message.tags == "success" %}
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg relative" role="alert">
-                <span class="block sm:inline">{{ message }}</span>
-            </div>
-        {% elif message.tags == "error" %}
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative" role="alert">
-                <span class="block sm:inline">{{ message }}</span>
-            </div>
-        {% else %}
-            <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded-lg relative" role="alert">
-                <span class="block sm:inline">{{ message }}</span>
-            </div>
-        {% endif %}
+        <div class="{% if message.tags == 'error' %}bg-red-100 border border-red-400 text-red-700{% else %}bg-green-100 border border-green-400 text-green-700{% endif %} px-4 py-3 rounded-lg relative" role="alert">
+          <span class="block sm:inline">{{ message }}</span>
+        </div>
       {% endfor %}
     </div>
     {% endif %}
 
     <div class="text-center mt-6">
-      <p class="text-lg text-gray-300">
+      <p class="text-lg text-gray-600">
         Don't have an account yet?
-        <a href="{% url 'main:register' %}" class="font-semibold text-white hover:text-gray-400 transition">
+        <a href="{% url 'main:register' %}" class="font-semibold text-gray-700 hover:text-gray-800 transition">
           Register Now
         </a>
       </p>
