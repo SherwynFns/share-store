@@ -135,6 +135,9 @@
         },
         body: formData,
       });
+
+      console.log('Response Status Code: ', response.status);
+      
       if (response.ok) {
         await refreshProdEntries();
         document.getElementById('productForm').reset();
